@@ -8,6 +8,18 @@ public class Libro extends Articolo {
 		this.disponibile = disponibile;
 	}
 
+	private String autore;
+	
+	
+	
+	public String getAutore() {
+		return autore;
+	}
+
+	public void setAutore(String autore) {
+		this.autore = autore;
+	}
+
 	@Override
 	public String ottieniTipo() {
 		return "Libro";

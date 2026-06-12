@@ -38,7 +38,7 @@ public class DVD extends Articolo {
     @Override
     public String toString() {
         String stato = disponibile ? "Disponibile" : "In Prestito";
-        return "[" + id + "] (DVD) " + titolo + " - " + autore + " [" + stato + "]";
+        return "[" + id + "] (DVD) " + titolo + " - " + " [" + stato + "]";
     }
 
 	

@@ -3,7 +3,6 @@ package it.tutti.connessi.gestore.biblioteca.model;
 public abstract class Articolo {
     protected int id;
     protected String titolo;
-    protected String autore;
     protected boolean disponibile;
 
     public Articolo(int id, String titolo) {
