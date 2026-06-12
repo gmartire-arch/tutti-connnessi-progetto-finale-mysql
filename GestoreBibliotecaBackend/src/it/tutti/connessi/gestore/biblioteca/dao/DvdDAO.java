@@ -6,8 +6,8 @@ import java.sql.SQLException;
 
 public class DvdDAO extends ArticoloDAO {
 
-    public boolean aggiungiDvd(String titolo, int durataMinuti) {
-        String queryFiglio = "INSERT INTO dvd (id, durata_minuti) VALUES (?, ?)";
+    public boolean aggiungiDvd(String titolo, int durataMinuti, String regista) {
+        String queryFiglio = "INSERT INTO dvd (id, durata_minuti, regista) VALUES (?, ?, ?)";
         Connection conn = null;
 
         try {
@@ -23,6 +23,7 @@ public class DvdDAO extends ArticoloDAO {
             try (PreparedStatement stmtFiglio = conn.prepareStatement(queryFiglio)) {
                 stmtFiglio.setInt(1, idRisorsa);
                 stmtFiglio.setInt(2, durataMinuti);
+                stmtFiglio.setString(3, regista);
                 stmtFiglio.executeUpdate();
             }
 
@@ -47,10 +48,9 @@ public class DvdDAO extends ArticoloDAO {
         }
     }
 
-	@Override
-	public boolean modificaRisorsa(int id, String nuovoTitolo, String nuovoAutore, String casaDiscografica) {
+	public boolean modificaRisorsa(int id, String nuovoTitolo, int durataMinuti, String regista) {
         // Ipotizzando che nella tabella dvd ci siano le colonne 'regista_autore' e 'casa_discografica'
-        String queryFiglio = "UPDATE dvd SET regista_autore = ?, casa_discografica = ? WHERE id = ?";
+        String queryFiglio = "UPDATE dvd SET regista = ?, durata_minuti = ? WHERE id = ?";
         Connection conn = null;
 
         try {
@@ -61,8 +61,8 @@ public class DvdDAO extends ArticoloDAO {
 
             // 1. Aggiorna la tabella specifica 'dvd'
             try (PreparedStatement stmtFiglio = conn.prepareStatement(queryFiglio)) {
-                stmtFiglio.setString(1, nuovoAutore);
-                stmtFiglio.setString(2, casaDiscografica);
+                stmtFiglio.setString(1, regista);
+                stmtFiglio.setInt(2, durataMinuti);
                 stmtFiglio.setInt(3, id);
                 
                 int righeModificate = stmtFiglio.executeUpdate();

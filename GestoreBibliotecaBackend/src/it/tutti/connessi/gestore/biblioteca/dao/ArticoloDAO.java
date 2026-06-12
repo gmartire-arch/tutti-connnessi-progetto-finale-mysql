@@ -13,7 +13,7 @@ public abstract class ArticoloDAO {
 
 	// Metodo helper (usato dalle classi figlie)
     protected int inserisciRisorsaPadre(Connection conn, String titolo, String tipoRisorsa) throws SQLException {
-        String query = "INSERT INTO risorse_biblioteca (titolo, tipo_risorsa) VALUES (?, ?)";
+        String query = "INSERT INTO articoli (titolo, tipo_articolo) VALUES (?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, titolo);
             stmt.setString(2, tipoRisorsa);
@@ -27,8 +27,8 @@ public abstract class ArticoloDAO {
 
     // 1. METODO POLIMORFICO: Visualizza tutto il catalogo (Libri + DVD)
     public void visualizzaCatalogoCompleto() {
-        String query = "SELECT r.id, r.titolo, r.tipo_risorsa, r.disponibile, l.autore, d.durata_minuti " +
-                       "FROM risorse_biblioteca r " +
+        String query = "SELECT r.id, r.titolo, r.tipo_articolo, r.disponibile, l.autore, d.durata_minuti " +
+                       "FROM articoli r " +
                        "LEFT JOIN libri l ON r.id = l.id " +
                        "LEFT JOIN dvd d ON r.id = d.id";
 
@@ -40,7 +40,7 @@ public abstract class ArticoloDAO {
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String titolo = rs.getString("titolo");
-                String tipo = rs.getString("tipo_risorsa");
+                String tipo = rs.getString("tipo_articolo");
                 boolean disponibile = rs.getBoolean("disponibile");
                 String stato = disponibile ? "Disponibile" : "In Prestito";
 
@@ -58,7 +58,7 @@ public abstract class ArticoloDAO {
     
  // Helper comune per aggiornare il titolo nella tabella padre
     protected boolean aggiornaTitoloPadre(Connection conn, int id, String nuovoTitolo) throws SQLException {
-        String query = "UPDATE risorse_biblioteca SET titolo = ? WHERE id = ?";
+        String query = "UPDATE articoli SET titolo = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, nuovoTitolo);
             stmt.setInt(2, id);
@@ -67,11 +67,13 @@ public abstract class ArticoloDAO {
     }
 
     // Metodo astratto che ogni DAO figlio implementerà per la sua parte specifica
-    public abstract boolean modificaRisorsa(int id, String nuovoTitolo, String datoSpecifico1, String datoSpecifico2);
+    public abstract boolean modificaRisorsa(int id, String nuovoTitolo, int datoSpecifico1, String datoSpecifico2);
+    
+    
 
     // 2. METODO POLIMORFICO: Cambia lo stato di disponibilità (utile per i Prestiti)
     public boolean aggiornaDisponibilita(int id, boolean disponibile) {
-        String query = "UPDATE risorse_biblioteca SET disponibile = ? WHERE id = ?";
+        String query = "UPDATE articoli SET disponibile = ? WHERE id = ?";
         try (Connection conn = ConnessioneDB.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
@@ -87,7 +89,7 @@ public abstract class ArticoloDAO {
 
     // 3. METODO COMUNE: Elimina una risorsa qualsiasi dal catalogo
     public boolean eliminaRisorsa(int id) {
-        String query = "DELETE FROM risorse_biblioteca WHERE id = ?";
+        String query = "DELETE FROM articoli WHERE id = ?";
         try (Connection conn = ConnessioneDB.getConnessione();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
@@ -100,8 +102,8 @@ public abstract class ArticoloDAO {
     
     
     public Articolo trovaRisorsaPerId(int id) {
-        String query = "SELECT r.id, r.titolo, r.tipo_risorsa, r.disponibile, l.autore, d.durata_minuti " +
-                       "FROM risorse_biblioteca r " +
+        String query = "SELECT r.id, r.titolo, r.tipo_articolo, r.disponibile, l.autore, d.durata_minuti " +
+                       "FROM articoli r " +
                        "LEFT JOIN libri l ON r.id = l.id " +
                        "LEFT JOIN dvd d ON r.id = d.id " +
                        "WHERE r.id = ?";
@@ -114,7 +116,7 @@ public abstract class ArticoloDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     String titolo = rs.getString("titolo");
-                    String tipo = rs.getString("tipo_risorsa");
+                    String tipo = rs.getString("tipo_articolo");
                     boolean disponibile = rs.getBoolean("disponibile");
                     
                     if ("LIBRO".equals(tipo)) {

@@ -37,11 +37,12 @@ public class MainApplication {
             System.out.println("1. Mostra tutti i libri (Read)");
             System.out.println("2. Aggiungi un nuovo libro (Create)");
             System.out.println("3. Modifica un libro esistente (Update)");
-            System.out.println("4. Elimina un libro (Delete)");
-            System.out.println("5. Registra PRESTITO libro");
-            System.out.println("6. Registra RESTITUZIONE libro");
-            System.out.println("7. Modifica un DVD esistente (Update)");
-            System.out.println("8. Esci dal programma");
+            System.out.println("4. Elimina articolo (Delete)");
+            System.out.println("5. Registra PRESTITO articolo");
+            System.out.println("6. Registra RESTITUZIONE articolo");
+            System.out.println("7. Aggiungi un nuovo DVD (Create)");
+            System.out.println("8. Modifica un DVD esistente (Update)");
+            System.out.println("9. Esci dal programma");
             System.out.print("Scegli un'opzione (1-7): ");
 
             // Dichiariamo la variabile scelta fuori dal try per poterla usare nello switch
@@ -70,7 +71,7 @@ public class MainApplication {
                     String titolo = scanner.nextLine();
                     System.out.print("Inserisci l'autore del libro: ");
                     String autore = scanner.nextLine();
-                    miaBiblioteca.aggiungiArticolo(titolo, autore, "LIBRO", "");
+                    miaBiblioteca.aggiungiArticolo(titolo, autore, "LIBRO", "", 0);
                     break;
                 case 3:
                     // Nota: Anche qui dentro, per essere sicuri al 100%, l'ID andrebbe protetto con un try-catch!
@@ -81,7 +82,7 @@ public class MainApplication {
                     String nuovoTitolo = scanner.nextLine();
                     System.out.print("Inserisci il NUOVO autore: ");
                     String nuovoAutore = scanner.nextLine();
-                    miaBiblioteca.modificaArticolo(idModifica, nuovoTitolo, nuovoAutore, null);
+                    miaBiblioteca.modificaArticolo(idModifica, nuovoTitolo, nuovoAutore, "", 0);
                     break;
                 case 4:
                     System.out.print("Inserisci l'ID del libro da eliminare: ");
@@ -99,19 +100,28 @@ public class MainApplication {
                     miaBiblioteca.restituisciRisorsa(idRestituzione);
                     break;
                 case 7:
+                    System.out.print("Inserisci il titolo del DVD: ");
+                    String titoloDvd = scanner.nextLine();
+                    System.out.print("Inserisci il regista del DVD: ");
+                    String regista = scanner.nextLine();
+                    System.out.print("Inserisci la DURATA : ");
+                    String durata = scanner.nextLine();
+                    miaBiblioteca.aggiungiArticolo(titoloDvd, "", "DVD", regista, Integer.valueOf(durata));
+                    break;
+                case 8:
                     // Nota: Anche qui dentro, per essere sicuri al 100%, l'ID andrebbe protetto con un try-catch!
                     System.out.print("Inserisci l'ID del DVD da modificare: ");
                     int idModificaDvd = scanner.nextInt();
                     scanner.nextLine();
                     System.out.print("Inserisci il NUOVO titolo: ");
                     String nuovoTitoloDvd = scanner.nextLine();
-                    System.out.print("Inserisci il NUOVO autore: ");
-                    String nuovoAutoreDvd = scanner.nextLine();
-                    System.out.print("Inserisci il NUOVa casa disc: ");
-                    String nuovoCasaDiscDvd = scanner.nextLine();
-                    miaBiblioteca.modificaArticolo(idModificaDvd, nuovoTitoloDvd, nuovoAutoreDvd, nuovoCasaDiscDvd);
+                    System.out.print("Inserisci il NUOVO regista: ");
+                    String nuovoRegista = scanner.nextLine();
+                    System.out.print("Inserisci la DURATA : ");
+                    String nuovaDurata = scanner.nextLine();
+                    miaBiblioteca.modificaArticolo(idModificaDvd, nuovoTitoloDvd, "", nuovoRegista, Integer.valueOf(nuovaDurata));
                     break;
-                case 8:
+                case 9:
                     System.out.println("Grazie per aver usato il gestionale. Arrivederci! 👋");
                     inEsecuzione = false;
                     break;

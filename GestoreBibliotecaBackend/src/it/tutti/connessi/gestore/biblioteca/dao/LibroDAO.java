@@ -48,7 +48,7 @@ public class LibroDAO extends ArticoloDAO {
     }
 
 	@Override
-	public boolean modificaRisorsa(int id, String nuovoTitolo, String nuovoAutore, String parametroInutile) {
+	public boolean modificaRisorsa(int id, String nuovoTitolo, int parametroInutile, String nuovoAutore) {
         String queryFiglio = "UPDATE libri SET autore = ? WHERE id = ?";
         Connection conn = null;
 

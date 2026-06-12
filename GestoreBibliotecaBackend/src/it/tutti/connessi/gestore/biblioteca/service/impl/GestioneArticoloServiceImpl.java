@@ -17,7 +17,7 @@ import it.tutti.connessi.gestore.biblioteca.model.Libro;
 public class GestioneArticoloServiceImpl {
 
 // [CREATE] Aggiungere un libro
-public void aggiungiArticolo(String titolo, String autore, String tipo, String casaDisc) {
+public void aggiungiArticolo(String titolo, String autore, String tipo, String regista, int durata) {
 	
 	switch (tipo) {
 	case "LIBRO": {
@@ -27,7 +27,7 @@ public void aggiungiArticolo(String titolo, String autore, String tipo, String c
 	}
 	case "DVD": {
 		DvdDAO dvdDAO = new DvdDAO();
-		dvdDAO.aggiungiDvd(titolo, 0);
+		dvdDAO.aggiungiDvd(titolo, durata, regista);
         break;
 	}
 	default:
@@ -45,7 +45,7 @@ public void mostraArticoli() {
 
 
 // [UPDATE] Modificare i dati di un libro esistente tramite ID
-public void modificaArticolo(int id, String nuovoTitolo, String nuovoAutore, String casaDisc) {
+public void modificaArticolo(int id, String nuovoTitolo, String nuovoAutore, String regista, int durata) {
     Articolo risorsa = trovaArticoloPerId(id);
 
     if (risorsa == null) {
@@ -61,14 +61,14 @@ public void modificaArticolo(int id, String nuovoTitolo, String nuovoAutore, Str
     if (risorsa instanceof Libro) {
         Libro libro = (Libro) risorsa;
         LibroDAO libroDAO = new LibroDAO();
-        libroDAO.modificaRisorsa(libro.getId(), nuovoTitolo, nuovoAutore, "");
+        libroDAO.modificaRisorsa(libro.getId(), nuovoTitolo, 0, nuovoAutore);
         
         System.out.println("📝 Libro ID " + id + " modificato con successo!");
     } else if (risorsa instanceof DVD) {
     	DVD libro = (DVD) risorsa; // Cast: trasformiamo la risorsa generica in Libro
 
         DvdDAO dvdDAO = new DvdDAO();
-        dvdDAO.modificaRisorsa(libro.getId(), nuovoTitolo, nuovoAutore, casaDisc);
+        dvdDAO.modificaRisorsa(libro.getId(), nuovoTitolo, durata, regista);
         System.out.println("📝 DVD ID " + id + " modificato con successo!");
     }
     else {
@@ -80,9 +80,15 @@ public void modificaArticolo(int id, String nuovoTitolo, String nuovoAutore, Str
 public void prestaRisorsa(int id) {
     Articolo r = trovaArticoloPerId(id);
     if (r != null) {
-       ArticoloDAO articoloDAO = new LibroDAO();
-       articoloDAO.aggiornaDisponibilita(id, false);
-    } else {
+       
+    	if(r.isDisponibile()) {
+    		  ArticoloDAO articoloDAO = new LibroDAO();
+    	       articoloDAO.aggiornaDisponibilita(id, false);
+    	} else {
+    		 System.out.println("❌ ID " + id + " gia' in prestito, non e' possibile eseguire l'operazione.");
+    	}
+    }
+      else {
         System.out.println("❌ ID " + id + " non trovato nell'inventario.");
     }
 }
@@ -91,8 +97,12 @@ public void prestaRisorsa(int id) {
 public void restituisciRisorsa(int id) {
     Articolo r = trovaArticoloPerId(id);
     if (r != null) {
-        ArticoloDAO articoloDAO = new LibroDAO();
-        articoloDAO.aggiornaDisponibilita(id, true);
+    	if(!r.isDisponibile()) {
+	        ArticoloDAO articoloDAO = new LibroDAO();
+	        articoloDAO.aggiornaDisponibilita(id, true);
+    	} else {
+   		 System.out.println("❌ ID " + id + " risulta non in prestito, non e' possibile eseguire l'operazione.");
+   	}
     } else {
         System.out.println("❌ ID " + id + " non trovato nell'inventario.");
     }
@@ -102,7 +112,8 @@ public void restituisciRisorsa(int id) {
 public void eliminaArticolo(int id) {
 	Articolo articolo = trovaArticoloPerId(id);
     if (articolo != null) {
-        
+        ArticoloDAO articoloDAO = new LibroDAO();
+        articoloDAO.eliminaRisorsa(id);
         System.out.println("🗑️ Articolo rimosso dall'inventario.");
     } else {
         System.out.println("❌ Errore: Impossibile eliminare. ID non trovato.");
