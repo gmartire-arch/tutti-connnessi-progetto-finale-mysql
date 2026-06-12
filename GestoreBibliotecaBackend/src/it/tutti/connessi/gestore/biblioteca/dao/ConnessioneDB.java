@@ -6,9 +6,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnessioneDB {
-    private static final String URL = "jdbc:mysql://mysql-tutticonnessi-tutticonnessi-database.l.aivencloud.com:18981/tutticonnessi?ssl-mode=REQUIRED";
-    private static final String USER = "avnadmin";       // Cambia con il tuo utente MySQL
-    private static final String PASSWORD = "AVNS_fSF2olOLAjCFYnt1Rqj";   // Cambia con la tua password MySQL
+    private static final String URL = "jdbc:mysql://nomedb:18981/nomeschema?ssl-mode=REQUIRED";
+    private static final String USER = "admin";       // Cambia con il tuo utente MySQL
+    private static final String PASSWORD = "password";   // Cambia con la tua password MySQL
 
     public static Connection getConnessione() {
         try {
